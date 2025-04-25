@@ -1,8 +1,30 @@
 <script>
+    import { onMount } from 'svelte';
+    import { browser } from '$app/environment';
+
     let url = '';
     let videoUrl = '';
     let error = '';
     let loading = false;
+
+    // Muat skrip iklan saat komponen dimuat di browser
+    onMount(() => {
+        if (!browser) return; // Pastikan hanya berjalan di browser
+
+        // Buat elemen <script>
+        const ad1 = document.getElementById('ad1');
+        const script = document.createElement('script');
+        script.src = 'https://curoax.com/na/waWQiOjEyMDA2NTcsInNpZCI6MTUwNDYwNCwid2lkIjo3MTA2MTYsInNyYyI6Mn0=eyJ.js';
+        script.async = true;
+
+        // Tambahkan skrip ke dokumen
+        ad1?.appendChild(script);
+
+        // Bersihkan skrip saat komponen dihancurkan (opsional)
+        return () => {
+            document.body.removeChild(script);
+        };
+    });
 
     async function downloadVideo() {
         loading = true;
@@ -50,7 +72,6 @@
 
             <button
                 on:click={downloadVideo}
-                 
                 class="w-full p-3 bg-pink-500 text-white rounded-md hover:bg-pink-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
                 {loading ? 'Downloading...' : 'Download'}
@@ -73,6 +94,9 @@
                     </a>
                 </div>
             {/if}
+            <div class="flex w-full justify-center items-center" id="ad1">
+                
+            </div>
         </div>
     </div>
 </main>
